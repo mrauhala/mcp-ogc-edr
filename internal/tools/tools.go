@@ -201,7 +201,11 @@ func (r *Registry) QueryTrajectoryTool() mcp.Tool {
 
 // requireString extracts a required string argument from a tool request.
 func requireString(req mcp.CallToolRequest, key string) (string, error) {
-	v, ok := req.Params.Arguments[key]
+	args, ok := req.Params.Arguments.(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("invalid arguments")
+	}
+	v, ok := args[key]
 	if !ok {
 		return "", fmt.Errorf("missing required argument %q", key)
 	}
@@ -385,21 +389,22 @@ func (r *Registry) HandleQueryTrajectory(ctx context.Context, req mcp.CallToolRe
 
 func extractQueryParams(req mcp.CallToolRequest) (types.EDRQueryParams, error) {
 	p := types.EDRQueryParams{}
-	p.Coords, _ = requireString(req,"coords")
-	// Optional fields — ignore errors (they won't be set if missing)
-	if v, ok := req.Params.Arguments["datetime"].(string); ok {
+	p.Coords, _ = requireString(req, "coords")
+	// Optional fields — cast Arguments to map first (type changed to any in v0.30+)
+	args, _ := req.Params.Arguments.(map[string]interface{})
+	if v, ok := args["datetime"].(string); ok {
 		p.Datetime = v
 	}
-	if v, ok := req.Params.Arguments["parameter_name"].(string); ok {
+	if v, ok := args["parameter_name"].(string); ok {
 		p.ParameterName = v
 	}
-	if v, ok := req.Params.Arguments["crs"].(string); ok {
+	if v, ok := args["crs"].(string); ok {
 		p.CRS = v
 	}
-	if v, ok := req.Params.Arguments["z"].(string); ok {
+	if v, ok := args["z"].(string); ok {
 		p.Z = v
 	}
-	if v, ok := req.Params.Arguments["f"].(string); ok {
+	if v, ok := args["f"].(string); ok {
 		p.F = v
 	}
 	return p, nil

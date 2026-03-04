@@ -139,7 +139,10 @@ func (s *Server) Run(ctx context.Context, transport, sseAddr string) error {
 			server.WithBaseURL(fmt.Sprintf("http://%s", sseAddr)),
 		)
 		return sseServer.Start(sseAddr)
+	case "streamable-http":
+		httpServer := server.NewStreamableHTTPServer(s.mcp)
+		return httpServer.Start(sseAddr)
 	default:
-		return fmt.Errorf("unknown transport %q: must be 'stdio' or 'sse'", transport)
+		return fmt.Errorf("unknown transport %q: must be 'stdio', 'sse', or 'streamable-http'", transport)
 	}
 }

@@ -4,7 +4,7 @@ services:
     build: .
     environment:
       EDR_BASE_URL: ${EDR_BASE_URL:-https://opendata.fmi.fi/edr}
-      MCP_TRANSPORT: sse
+      MCP_TRANSPORT: streamable-http
       SSE_ADDR: :8080
       LOG_LEVEL: ${LOG_LEVEL:-info}
     ports:
