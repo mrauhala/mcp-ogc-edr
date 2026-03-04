@@ -4,6 +4,7 @@ package mcp
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	mcpgo "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -140,9 +141,33 @@ func (s *Server) Run(ctx context.Context, transport, sseAddr string) error {
 		)
 		return sseServer.Start(sseAddr)
 	case "streamable-http":
-		httpServer := server.NewStreamableHTTPServer(s.mcp)
-		return httpServer.Start(sseAddr)
+		mux := http.NewServeMux()
+		httpSrv := &http.Server{Handler: corsMiddleware(mux)}
+		mcpHandler := server.NewStreamableHTTPServer(s.mcp,
+			server.WithStreamableHTTPServer(httpSrv),
+		)
+		mux.Handle("/mcp", mcpHandler)
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprintf(w, `{"status":"ok","name":"mcp-ogc-edr","mcp_endpoint":"/mcp"}`)
+		})
+		return mcpHandler.Start(sseAddr)
 	default:
 		return fmt.Errorf("unknown transport %q: must be 'stdio', 'sse', or 'streamable-http'", transport)
 	}
+}
+
+// corsMiddleware adds CORS headers required for clients connecting from browser/Electron contexts.
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Accept, Mcp-Session-Id")
+		w.Header().Set("Access-Control-Expose-Headers", "Mcp-Session-Id")
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
