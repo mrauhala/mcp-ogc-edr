@@ -1,0 +1,12 @@
+services:
+  fmi-edr:
+    image: ghcr.io/${GITHUB_REPOSITORY:-mrauhala/mcp-ogc-edr}:latest
+    build: .
+    environment:
+      EDR_BASE_URL: ${EDR_BASE_URL:-https://opendata.fmi.fi/edr}
+      MCP_TRANSPORT: sse
+      SSE_ADDR: :8080
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
