@@ -12,7 +12,7 @@ import (
 func main() {
 	var (
 		edrBaseURL = flag.String("edr-url", envOrDefault("EDR_BASE_URL", "https://example.com/edr"), "OGC EDR API base URL")
-		transport  = flag.String("transport", envOrDefault("MCP_TRANSPORT", "stdio"), "MCP transport: stdio or sse")
+		transport  = flag.String("transport", envOrDefault("MCP_TRANSPORT", "stdio"), "MCP transport: stdio, sse, or streamable-http")
 		sseAddr    = flag.String("sse-addr", envOrDefault("SSE_ADDR", ":8080"), "SSE listen address")
 		logLevel   = flag.String("log-level", envOrDefault("LOG_LEVEL", "info"), "Log level: debug, info, warn, error")
 	)

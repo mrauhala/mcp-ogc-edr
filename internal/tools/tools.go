@@ -251,7 +251,7 @@ func (r *Registry) HandleListCollections(ctx context.Context, req mcp.CallToolRe
 
 // HandleGetCollection handles the get_collection tool call.
 func (r *Registry) HandleGetCollection(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -266,7 +266,7 @@ func (r *Registry) HandleGetCollection(ctx context.Context, req mcp.CallToolRequ
 
 // HandleGetLocations handles the get_locations tool call.
 func (r *Registry) HandleGetLocations(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -281,7 +281,7 @@ func (r *Registry) HandleGetLocations(ctx context.Context, req mcp.CallToolReque
 
 // HandleQueryPosition handles the query_position tool call.
 func (r *Registry) HandleQueryPosition(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -301,7 +301,7 @@ func (r *Registry) HandleQueryPosition(ctx context.Context, req mcp.CallToolRequ
 
 // HandleQueryRadius handles the query_radius tool call.
 func (r *Registry) HandleQueryRadius(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -310,8 +310,8 @@ func (r *Registry) HandleQueryRadius(ctx context.Context, req mcp.CallToolReques
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
-	params.Within, _ = requireString(req,"within")
-	params.WithinUnits, _ = requireString(req,"within_units")
+	params.Within, _ = requireString(req, "within")
+	params.WithinUnits, _ = requireString(req, "within_units")
 
 	data, err := r.client.QueryRadius(ctx, collectionID, params)
 	if err != nil {
@@ -323,7 +323,7 @@ func (r *Registry) HandleQueryRadius(ctx context.Context, req mcp.CallToolReques
 
 // HandleQueryArea handles the query_area tool call.
 func (r *Registry) HandleQueryArea(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -343,11 +343,11 @@ func (r *Registry) HandleQueryArea(ctx context.Context, req mcp.CallToolRequest)
 
 // HandleQueryLocation handles the query_location tool call.
 func (r *Registry) HandleQueryLocation(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
-	locationID, err := requireString(req,"location_id")
+	locationID, err := requireString(req, "location_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
@@ -367,7 +367,7 @@ func (r *Registry) HandleQueryLocation(ctx context.Context, req mcp.CallToolRequ
 
 // HandleQueryTrajectory handles the query_trajectory tool call.
 func (r *Registry) HandleQueryTrajectory(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	collectionID, err := requireString(req,"collection_id")
+	collectionID, err := requireString(req, "collection_id")
 	if err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
